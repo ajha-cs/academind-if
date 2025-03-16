@@ -7,8 +7,17 @@ on:
                 required: false
                 default: dist
                 type: string
+        # secrets:
+        #     some-secret:
+        #         required: false
+        outputs:
+            result:
+                description: Outputting some values
+                value: ${{ jobs.deploy.outputs.outcome }}
 jobs:
     deploy:
+        outputs:
+            outcome: ${{ steps.set-res.outputs.step-res }}
         runs-on: ubuntu-latest
         steps:
             - name: Get Code
@@ -17,3 +26,6 @@ jobs:
                 name: ${{ inputs.artifact-name }}
             - name: Output info
               run: echo "Getting called by another WF"
+            - name: Set output
+              id: set-res
+              run: echo "::set-output name=step-res::success"
